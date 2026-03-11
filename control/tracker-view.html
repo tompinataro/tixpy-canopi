@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Action Grid Tracker</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+    :root {
+      color-scheme: light;
+      --bg: #f6f2ea;
+      --panel: #fffdfa;
+      --panel-soft: #f7f1e7;
+      --ink: #1f2329;
+      --muted: #56606d;
+      --line: #d8d2c6;
+      --done: #f7d6e8;
+      --ready: #d8f3dc;
+      --running: #dbeafe;
+      --blocked: #ffe3e3;
+      --pause: #fff3bf;
+      --pending: #eceff4;
+      --shadow: 0 10px 30px rgba(24, 28, 35, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px;
+      font-family: "Space Grotesk", "Avenir Next", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 15% 0%, #efe4d2 0%, rgba(239, 228, 210, 0) 33%),
+        radial-gradient(circle at 100% 10%, #dfeadf 0%, rgba(223, 234, 223, 0) 28%),
+        var(--bg);
+      color: var(--ink);
+    }
+
+    .wrap {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .table-shell {
+      background: rgba(255, 253, 250, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 180px;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .controls input,
+    .controls select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 253, 250, 0.9);
+      color: var(--ink);
+      padding: 8px 10px;
+      font: inherit;
+      font-size: 13px;
+      outline: none;
+      box-shadow: 0 4px 18px rgba(24, 28, 35, 0.04);
+    }
+
+    .controls input:focus,
+    .controls select:focus {
+      border-color: #8e7a54;
+      box-shadow: 0 0 0 3px rgba(142, 122, 84, 0.16);
+    }
+
+    .table-shell {
+      overflow: auto;
+      max-height: 72vh;
+    }
+
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 1040px;
+      width: max-content;
+    }
+
+    th,
+    td {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 6px 7px;
+      text-align: left;
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.92);
+      white-space: nowrap;
+      line-height: 1.25;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      background: #f2ede2;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      white-space: normal;
+    }
+
+    th:first-child,
+    td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: #fffefa;
+    }
+
+    th:first-child {
+      z-index: 4;
+      background: #ece3d2;
+    }
+
+    tbody tr:nth-child(even) td {
+      background: rgba(255, 253, 249, 0.95);
+    }
+
+    tbody tr[data-overall="BLOCKED"] td:first-child {
+      background: #fff4f4;
+    }
+
+    .cell-project {
+      min-width: 128px;
+      max-width: 160px;
+      white-space: normal;
+      font-weight: 700;
+    }
+
+    .cell-next-action {
+      white-space: normal;
+      min-width: 170px;
+      max-width: 230px;
+      color: var(--ink);
+    }
+
+    .clamp-2 {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      white-space: normal;
+      line-height: 1.25;
+    }
+
+    .cell-done {
+      background: #f4fcf5;
+    }
+
+    .cell-pending {
+      background: #fffdf6;
+    }
+
+    .cell-flag {
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .cell-status {
+      text-align: center;
+      min-width: 74px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 2px 6px;
+      font-size: 10px;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .status-toggle {
+      cursor: pointer;
+      appearance: none;
+      font: inherit;
+    }
+
+    .status-done { background: var(--done); border-color: #e49abc; }
+    .status-submitted { background: var(--running); border-color: #93c5fd; }
+    .status-ready { background: var(--ready); border-color: #9fddb0; }
+    .status-running { background: var(--running); border-color: #93c5fd; }
+    .status-blocked { background: var(--blocked); border-color: #ffb3b3; color: #b42318; }
+    .status-pause { background: var(--pause); border-color: #e2c866; }
+    .status-pending { background: var(--pending); border-color: #cfd6df; }
+
+    .cell-progress {
+      min-width: 38px;
+      text-align: right;
+      font-weight: 700;
+    }
+
+    @media (max-width: 980px) {
+      body { padding: 8px; }
+      .controls { grid-template-columns: 1fr; }
+      table { min-width: 920px; }
+      .cell-project { min-width: 110px; max-width: 132px; }
+      .cell-next-action { min-width: 150px; max-width: 190px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="controls">
+      <input id="search" type="search" placeholder="Filter by project, notes, or next action..." />
+      <select id="overallFilter">
+        <option value="">All Workflow States</option>
+        <option value="READY">READY</option>
+        <option value="RUNNING">RUNNING</option>
+        <option value="BLOCKED">BLOCKED</option>
+        <option value="DONE">DONE</option>
+        <option value="BACKLOG">BACKLOG</option>
+      </select>
+    </div>
+
+    <div class="table-shell">
+      <table>
+        <thead><tr><th title="Project identifier for the row.">Project</th><th title="Manual dashboard control. Defaults to READY and can be toggled to PAUSED in the current view without changing workflow data.">Status</th><th title="Hover to see the git remote URL for this project repository.">Repo</th><th title="Hover to see the local iOS IPA build path, if present.">Last IPA</th><th title="Real-device iOS validation status for the current IPA build.">TESTED</th><th title="Combined App Store Connect state: READY/RUNNING/BLOCKED, Submitted when sent, Done when verified evidence is present.">ASC SUB</th><th title="Hover to see the local Android AAB build path, if present.">Last AAB</th><th title="Combined Google Play state: READY/RUNNING/BLOCKED, Submitted when sent, Done when verified evidence is present.">PLAY SUB</th><th title="Real-device Android validation status for the current AAB build.">TESTED</th><th title="Percent of executable lifecycle steps currently marked DONE.">Prog</th><th title="Best next step to move this project forward from its current state.">Next</th></tr></thead>
+        <tbody><tr data-project="routemaster" data-overall="BLOCKED" data-next-action="Unblock Submit to Google Play: missing_required_metadata" data-notes="Blocked: gplay_submission_status" title="Blocked: gplay_submission_status"><td class="cell cell-project">routemaster</td><td class="cell cell-status"><button type="button" class="chip status-toggle status-ready" data-status="READY" title="Click to toggle between READY and PAUSED for this view.">READY</button></td><td class="cell cell-flag" title="https://github.com/tompinataro/RouteMaster.git">Y</td><td class="cell cell-flag" title="/Users/tompinataro/My Projects/RouteMaster/artifacts/ios/routemaster-build-53.ipa">2026-02-23</td><td class="cell"><span class="chip status-done">DONE</span></td><td class="cell"><span class="chip status-done">DONE</span></td><td class="cell cell-flag" title="/Users/tompinataro/My Projects/RouteMaster/artifacts/android/routemaster-local-20260304-132730-vc2.aab">2026-03-04</td><td class="cell"><span class="chip status-blocked">BLOCKED</span></td><td class="cell"><span class="chip status-done">DONE</span></td><td class="cell cell-progress">75%</td><td class="cell cell-next-action" title="Unblock Submit to Google Play: missing_required_metadata"><span class="clamp-2">Unblock Submit to Google Play: missing_required_metadata</span></td></tr>
+<tr data-project="bloom-steward" data-overall="READY" data-next-action="Run iOS device test after permission is set to GO" data-notes="Awaiting iOS + Android device tests" title="Awaiting iOS + Android device tests"><td class="cell cell-project">bloom-steward</td><td class="cell cell-status"><button type="button" class="chip status-toggle status-ready" data-status="READY" title="Click to toggle between READY and PAUSED for this view.">READY</button></td><td class="cell cell-flag" title="https://github.com/tompinataro/Bloom-Steward.git">Y</td><td class="cell cell-flag" title="/Users/tompinataro/My Projects/Bloom-Steward/artifacts/ios/bloom-steward-build-54.ipa">2026-02-23</td><td class="cell"><span class="chip status-ready">READY</span></td><td class="cell"><span class="chip status-done">DONE</span></td><td class="cell cell-flag" title="/Users/tompinataro/My Projects/Bloom-Steward/mobile/android/app/build/outputs/bundle/release/app-release.aab">2026-02-23</td><td class="cell"><span class="chip status-done">DONE</span></td><td class="cell"><span class="chip status-ready">READY</span></td><td class="cell cell-progress">63%</td><td class="cell cell-next-action" title="Run iOS device test after permission is set to GO"><span class="clamp-2">Run iOS device test after permission is set to GO</span></td></tr>
+<tr data-project="pool-steward" data-overall="BLOCKED" data-next-action="Unblock Submit to Google Play: missing_required_metadata" data-notes="Blocked: gplay_submission_status" title="Blocked: gplay_submission_status"><td class="cell cell-project">pool-steward</td><td class="cell cell-status"><button type="button" class="chip status-toggle status-ready" data-status="READY" title="Click to toggle between READY and PAUSED for this view.">READY</button></td><td class="cell cell-flag" title="https://github.com/tompinataro/Pool-Steward.git">Y</td><td class="cell cell-flag" title="/Users/tompinataro/My Projects/Pool-Steward/artifacts/ios/pool-steward-build-1.ipa">2026-02-23</td><td class="cell"><span class="chip status-ready">READY</span></td><td class="cell"><span class="chip status-done">DONE</span></td><td class="cell cell-flag" title="/Users/tompinataro/My Projects/Pool-Steward/artifacts/android/pool-steward-local-20260304-130929.aab">2026-03-04</td><td class="cell"><span class="chip status-blocked">BLOCKED</span></td><td class="cell"><span class="chip status-ready">READY</span></td><td class="cell cell-progress">50%</td><td class="cell cell-next-action" title="Unblock Submit to Google Play: missing_required_metadata"><span class="clamp-2">Unblock Submit to Google Play: missing_required_metadata</span></td></tr>
+<tr data-project="pull-tab-valet" data-overall="BLOCKED" data-next-action="Unblock Submit to Google Play: missing_required_metadata" data-notes="Blocked: gplay_submission_status" title="Blocked: gplay_submission_status"><td class="cell cell-project">pull-tab-valet</td><td class="cell cell-status"><button type="button" class="chip status-toggle status-ready" data-status="READY" title="Click to toggle between READY and PAUSED for this view.">READY</button></td><td class="cell cell-flag" title="git@github.com:tompinataro/Pull-Tab_Valet.git">Y</td><td class="cell cell-flag" title="/Users/tompinataro/My Projects/pull-tab_valet/artifacts/ios/pull-tab-valet-build-1.ipa">2026-02-25</td><td class="cell"><span class="chip status-ready">READY</span></td><td class="cell"><span class="chip status-done">DONE</span></td><td class="cell cell-flag" title="/Users/tompinataro/My Projects/pull-tab_valet/artifacts/android/pull-tab-valet-local-20260304-132730-vc2.aab">2026-03-04</td><td class="cell"><span class="chip status-blocked">BLOCKED</span></td><td class="cell"><span class="chip status-ready">READY</span></td><td class="cell cell-progress">50%</td><td class="cell cell-next-action" title="Unblock Submit to Google Play: missing_required_metadata"><span class="clamp-2">Unblock Submit to Google Play: missing_required_metadata</span></td></tr>
+<tr data-project="dvd_valet" data-overall="BLOCKED" data-next-action="Unblock Submit to Google Play: missing_required_metadata" data-notes="Blocked: gplay_submission_status" title="Blocked: gplay_submission_status"><td class="cell cell-project">dvd_valet</td><td class="cell cell-status"><button type="button" class="chip status-toggle status-ready" data-status="READY" title="Click to toggle between READY and PAUSED for this view.">READY</button></td><td class="cell cell-flag" title="git@github.com:tompinataro/DVD-Valet.git">Y</td><td class="cell cell-flag" title="/Users/tompinataro/My Projects/DVD-Valet/artifacts/ios/dvd-valet-build-2.ipa">2026-02-25</td><td class="cell"><span class="chip status-ready">READY</span></td><td class="cell"><span class="chip status-running">RUNNING</span></td><td class="cell cell-flag" title="/Users/tompinataro/My Projects/DVD-Valet/artifacts/android/dvd-valet-local-test.aab">2026-03-04</td><td class="cell"><span class="chip status-blocked">BLOCKED</span></td><td class="cell"><span class="chip status-ready">READY</span></td><td class="cell cell-progress">25%</td><td class="cell cell-next-action" title="Unblock Submit to Google Play: missing_required_metadata"><span class="clamp-2">Unblock Submit to Google Play: missing_required_metadata</span></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <script>
+    const rows = Array.from(document.querySelectorAll("tbody tr"));
+    const search = document.getElementById("search");
+    const overallFilter = document.getElementById("overallFilter");
+
+    function applyFilters() {
+      const query = search.value.trim().toLowerCase();
+      const overall = overallFilter.value.trim().toUpperCase();
+
+      rows.forEach((row) => {
+        const haystack = [
+          row.dataset.project || "",
+          row.dataset.overall || "",
+          row.dataset.nextAction || "",
+          row.dataset.notes || "",
+          row.textContent || "",
+        ].join(" ").toLowerCase();
+        const rowOverall = (row.dataset.overall || "").toUpperCase();
+        const matchesQuery = !query || haystack.includes(query);
+        const matchesOverall = !overall || rowOverall === overall;
+        row.style.display = matchesQuery && matchesOverall ? "" : "none";
+      });
+    }
+
+    search.addEventListener("input", applyFilters);
+    overallFilter.addEventListener("change", applyFilters);
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest(".status-toggle");
+      if (!button) return;
+      const current = (button.dataset.status || button.textContent || "").trim().toUpperCase();
+      const next = current === "PAUSED" ? "READY" : "PAUSED";
+      button.dataset.status = next;
+      button.textContent = next;
+      button.classList.remove("status-ready", "status-pause");
+      button.classList.add(next === "PAUSED" ? "status-pause" : "status-ready");
+    });
+  </script>
+</body>
+</html>
