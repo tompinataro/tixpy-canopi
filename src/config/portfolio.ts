@@ -9,14 +9,25 @@ import {
 } from '@/src/config/links';
 
 export type AppBadge = 'live' | 'demo';
+
 export type StoreType = 'App Store' | 'Google Play' | 'TestFlight';
+
+export type AppLink = {
+  storeType: StoreType;
+  url: string;
+};
 
 export type ShowcaseApp = {
   name: string;
   description: string;
   badge: AppBadge;
+  /**
+   * Phase 1 compatibility: single primary link.
+   * Phase 2: prefer `links` (multiple store options per app).
+   */
   storeType: StoreType;
   url: string;
+  links?: AppLink[];
 };
 
 export type ShowcasePlatform = {
@@ -41,6 +52,9 @@ export const ROUTEMASTER_PLATFORM: ShowcasePlatform = {
       badge: 'live',
       storeType: 'App Store',
       url: APP_STORE_BLOOM_URL,
+      links: [
+        { storeType: 'App Store', url: APP_STORE_BLOOM_URL },
+      ],
     },
     {
       name: 'Pool Steward',
@@ -48,6 +62,9 @@ export const ROUTEMASTER_PLATFORM: ShowcasePlatform = {
       badge: 'demo',
       storeType: 'TestFlight',
       url: TESTFLIGHT_POOL_URL,
+      links: [
+        { storeType: 'TestFlight', url: TESTFLIGHT_POOL_URL },
+      ],
     },
   ],
 };
@@ -65,6 +82,9 @@ export const VALET_BALLET_PLATFORM: ShowcasePlatform = {
       badge: 'live',
       storeType: 'Google Play',
       url: GOOGLE_PLAY_PTV_URL,
+      links: [
+        { storeType: 'Google Play', url: GOOGLE_PLAY_PTV_URL },
+      ],
     },
     {
       name: 'DVD Valet',
@@ -72,6 +92,9 @@ export const VALET_BALLET_PLATFORM: ShowcasePlatform = {
       badge: 'demo',
       storeType: 'TestFlight',
       url: TESTFLIGHT_DVD_URL,
+      links: [
+        { storeType: 'TestFlight', url: TESTFLIGHT_DVD_URL },
+      ],
     },
   ],
 };

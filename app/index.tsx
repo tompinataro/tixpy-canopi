@@ -1,4 +1,7 @@
 import { Platform, StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
+import { THEME } from '@/src/config/theme';
 
 import { AppItemCard } from '@/src/components/AppItemCard';
 import { PageContainer } from '@/src/components/PageContainer';
@@ -11,10 +14,19 @@ export default function HomeScreen() {
   return (
     <PageContainer>
       <View style={styles.hero}>
-        <Text style={styles.title}>Tixpy Canopi</Text>
-        <Text style={styles.subtitle}>Portfolio Container</Text>
+        <LinearGradient
+          colors={[`${THEME.colors.accentA}66`, `${THEME.colors.accentB}33`, 'transparent']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.heroGlow}
+        />
+
+        <Text style={styles.kicker}>Tixpy</Text>
+        <Text style={styles.title}>Canopi</Text>
+        <Text style={styles.subtitle}>A glossy portfolio container for the Tixpy app suite.</Text>
+
         <View style={styles.deviceHint}>
-          <Text style={styles.deviceHintText}>Device: {deviceLabel}</Text>
+          <Text style={styles.deviceHintText}>Viewing on {deviceLabel}</Text>
         </View>
       </View>
 
@@ -44,30 +56,55 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   hero: {
-    marginBottom: 12,
+    marginBottom: 10,
     gap: 8,
+    padding: 16,
+    borderRadius: THEME.radius.lg,
+    borderWidth: 1,
+    borderColor: THEME.colors.cardBorder,
+    backgroundColor: THEME.colors.card,
+    overflow: 'hidden',
+    ...THEME.shadow.soft,
+  },
+  heroGlow: {
+    position: 'absolute',
+    top: -40,
+    left: -40,
+    right: -40,
+    height: 160,
+  },
+  kicker: {
+    color: THEME.colors.muted,
+    fontSize: 12,
+    fontWeight: '800',
+    letterSpacing: 2.4,
+    textTransform: 'uppercase',
   },
   title: {
-    fontSize: 32,
-    fontWeight: '800',
-    color: '#102a43',
+    fontSize: 40,
+    fontWeight: '900',
+    color: THEME.colors.text,
+    letterSpacing: -0.6,
   },
   subtitle: {
-    fontSize: 16,
-    color: '#486581',
+    fontSize: 15,
+    lineHeight: 20,
+    color: THEME.colors.subtext,
   },
   deviceHint: {
     alignSelf: 'flex-start',
-    backgroundColor: '#d9e2ec',
-    borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderRadius: THEME.radius.pill,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: THEME.colors.cardBorder,
   },
   deviceHintText: {
-    color: '#334e68',
+    color: THEME.colors.muted,
     fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 0.4,
+    fontWeight: '800',
+    letterSpacing: 0.8,
     textTransform: 'uppercase',
   },
 });
