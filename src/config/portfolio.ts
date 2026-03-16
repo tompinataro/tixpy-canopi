@@ -2,8 +2,6 @@ import type { Href } from 'expo-router';
 
 import {
   APP_STORE_BLOOM_URL,
-  GOOGLE_PLAY_PTV_URL,
-  TESTFLIGHT_DVD_URL,
   TESTFLIGHT_POOL_URL,
 } from '@/src/config/links';
 
@@ -21,13 +19,10 @@ export type ShowcaseApp = {
   description: string;
   badge: AppBadge;
   icon: any;
-  /**
-   * Phase 1 compatibility: single primary link.
-   * Phase 2: prefer `links` (multiple store options per app).
-   */
-  storeType: StoreType;
-  url: string;
+  storeType?: StoreType;
+  url?: string;
   links?: AppLink[];
+  availabilityNote?: string;
 };
 
 export type ShowcasePlatform = {
@@ -85,25 +80,17 @@ export const VALET_BALLET_PLATFORM: ShowcasePlatform = {
   apps: [
     {
       name: 'Pull-Tab Valet',
-      description: 'Live Valet Ballet production app on Google Play.',
+      description: 'Public store link pending while the Google Play release is not yet live.',
       badge: 'live',
       icon: ICONS.pulltab,
-      storeType: 'Google Play',
-      url: GOOGLE_PLAY_PTV_URL,
-      links: [
-        { storeType: 'Google Play', url: GOOGLE_PLAY_PTV_URL },
-      ],
+      availabilityNote: 'Google Play link pending',
     },
     {
       name: 'DVD Valet',
-      description: 'Valet Ballet demo build distributed through TestFlight.',
+      description: 'Public iOS link pending while the TestFlight/App Store URL is not yet configured.',
       badge: 'demo',
       icon: ICONS.dvd,
-      storeType: 'TestFlight',
-      url: TESTFLIGHT_DVD_URL,
-      links: [
-        { storeType: 'TestFlight', url: TESTFLIGHT_DVD_URL },
-      ],
+      availabilityNote: 'Public link pending',
     },
   ],
 };
