@@ -15,8 +15,11 @@ export default function RouteMasterScreen() {
           title={app.name}
           description={app.description}
           badge={app.badge}
+          icon={app.icon}
           storeType={app.storeType}
           url={app.url}
+          links={app.links}
+          availabilityNote={app.availabilityNote}
           size="full"
         />
       ))}

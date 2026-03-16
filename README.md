@@ -18,8 +18,8 @@ Home (`/`) shows:
     - Bloom Steward (`live`) -> App Store button
     - Pool Steward (`demo`) -> TestFlight button
   - Valet Ballet
-    - Pull-Tab Valet (`live`) -> Google Play button
-    - DVD Valet (`demo`) -> TestFlight button
+    - Pull-Tab Valet (`live`) -> public link pending
+    - DVD Valet (`demo`) -> public link pending
 
 Platform pages:
 - `/routemaster` (larger cards with descriptions + buttons)
@@ -44,10 +44,12 @@ Update all external links in this file:
 - Relative path: `src/config/links.ts`
 - Absolute path: `/Users/tompinataro/My Projects/Tixpy-Canopi/src/config/links.ts`
 
-Replace these placeholder constants:
+Verified public links today:
 - `APP_STORE_BLOOM_URL`
-- `GOOGLE_PLAY_PTV_URL`
 - `TESTFLIGHT_POOL_URL`
+
+Unverified or pending public links:
+- `GOOGLE_PLAY_PTV_URL`
 - `TESTFLIGHT_DVD_URL`
 
 External links are opened via React Native `Linking` and show a friendly alert if opening fails.

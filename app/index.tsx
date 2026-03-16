@@ -40,6 +40,8 @@ export default function HomeScreen() {
               icon={app.icon}
               storeType={app.storeType}
               url={app.url}
+              links={app.links}
+              availabilityNote={app.availabilityNote}
               size="compact"
             />
           ))}
