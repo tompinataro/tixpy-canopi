@@ -1,22 +1,35 @@
 import fs from 'fs';
+import path from 'path';
 
-const p = 'dist/index.html';
-let html = fs.readFileSync(p, 'utf8');
+const distDir = 'dist';
 
-// GitHub Pages project sites are served from /<repo>/.
-// Make all asset paths relative so the bundle works under any basePath.
-html = html.replaceAll('src="/_expo/', 'src="./_expo/');
-html = html.replaceAll("src='/_expo/", "src='./_expo/");
-html = html.replaceAll('href="/_expo/', 'href="./_expo/');
-html = html.replaceAll("href='/_expo/", "href='./_expo/");
+function patchHtml(html) {
+  // GitHub Pages project sites are served from /<repo>/.
+  // Make all asset paths relative so the bundle works under any basePath.
+  return html
+    .replaceAll('src="/_expo/', 'src="./_expo/')
+    .replaceAll("src='/_expo/", "src='./_expo/")
+    .replaceAll('href="/_expo/', 'href="./_expo/')
+    .replaceAll("href='/_expo/", "href='./_expo/")
+    .replaceAll('href="/assets/', 'href="./assets/')
+    .replaceAll("href='/assets/", "href='./assets/")
+    .replaceAll('src="/assets/', 'src="./assets/')
+    .replaceAll("src='/assets/", "src='./assets/")
+    .replaceAll('href="/favicon.ico"', 'href="./favicon.ico"')
+    .replaceAll("href='/favicon.ico'", "href='./favicon.ico'");
+}
 
-html = html.replaceAll('href="/assets/', 'href="./assets/');
-html = html.replaceAll("href='/assets/", "href='./assets/");
-html = html.replaceAll('src="/assets/', 'src="./assets/');
-html = html.replaceAll("src='/assets/", "src='./assets/");
+for (const entry of fs.readdirSync(distDir)) {
+  if (!entry.endsWith('.html')) {
+    continue;
+  }
 
-html = html.replaceAll('href="/favicon.ico"', 'href="./favicon.ico"');
-html = html.replaceAll("href='/favicon.ico'", "href='./favicon.ico'");
+  const filePath = path.join(distDir, entry);
+  const html = fs.readFileSync(filePath, 'utf8');
+  fs.writeFileSync(filePath, patchHtml(html));
+  console.log('Patched', filePath);
+}
 
-fs.writeFileSync(p, html);
-console.log('Patched', p);
+// Prevent GitHub Pages' default Jekyll processing from hiding `_expo/`.
+fs.writeFileSync(path.join(distDir, '.nojekyll'), '');
+console.log('Wrote', path.join(distDir, '.nojekyll'));
