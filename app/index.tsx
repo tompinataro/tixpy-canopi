@@ -21,7 +21,7 @@ export default function HomeScreen() {
 
         <View style={styles.titleLine}>
           <Text style={styles.title}>Tixpy Canopi</Text>
-          <Text style={styles.subtitle}>. . . a showcase for custom applications</Text>
+          <Text style={styles.subtitle}>. . . a showcase for custom applications by Tom Pinataro</Text>
         </View>
       </View>
 
