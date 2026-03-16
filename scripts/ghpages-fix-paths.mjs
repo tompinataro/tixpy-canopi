@@ -19,6 +19,23 @@ function patchHtml(html) {
     .replaceAll("href='/favicon.ico'", "href='./favicon.ico'");
 }
 
+function patchWebBundle(bundle) {
+  return bundle
+    .replaceAll(
+      'e.getUrlWithReactNavigationConcessions=function(t,n=""){',
+      'e.getUrlWithReactNavigationConcessions=function(t,n="tixpy-canopi"){'
+    )
+    .replaceAll(
+      'function o(t,a=""){return a?t.replace(/^\\/+/g,\'/\').replace(new RegExp(`^\\\\/?${(0,n.default)(a)}`,\'g\'),\'\'):t}',
+      'function o(t,a="tixpy-canopi"){return a?t.replace(/^\\/+/g,\'/\').replace(new RegExp(`^\\\\/?${(0,n.default)(a)}`,\'g\'),\'\'):t}'
+    )
+    .replaceAll(
+      'e.appendBaseUrl=function(t,n=""){if(n)return`/${n.replace(/^\\/+/,\'\').replace(/\\/$/,\'\')}${t}`;return t}',
+      'e.appendBaseUrl=function(t,n="tixpy-canopi"){if(n)return`/${n.replace(/^\\/+/,\'\').replace(/\\/$/,\'\')}${t}`;return t}'
+    )
+    .replaceAll('uri:"/assets/', 'uri:"./assets/');
+}
+
 for (const entry of fs.readdirSync(distDir)) {
   if (!entry.endsWith('.html')) {
     continue;
@@ -38,7 +55,7 @@ for (const entry of fs.readdirSync(webBundleDir)) {
 
   const filePath = path.join(webBundleDir, entry);
   const bundle = fs.readFileSync(filePath, 'utf8');
-  const patchedBundle = bundle.replaceAll('uri:"/assets/', 'uri:"./assets/');
+  const patchedBundle = patchWebBundle(bundle);
   fs.writeFileSync(filePath, patchedBundle);
   console.log('Patched', filePath);
 }
