@@ -1,3 +1,4 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { AppBadge, AppLink, StoreType } from '@/src/config/portfolio';
@@ -11,27 +12,24 @@ type AppItemCardProps = {
   description: string;
   badge: AppBadge;
   icon?: any;
-  storeType?: StoreType;
-  url?: string;
+  /** Primary link (Phase 1) */
+  storeType: StoreType;
+  url: string;
+  /** Optional additional links (Phase 2) */
   links?: AppLink[];
-  availabilityNote?: string;
   size?: 'compact' | 'full';
 };
 
-export function AppItemCard({
-  title,
-  description,
-  badge,
-  icon,
-  storeType,
-  url,
-  links,
-  availabilityNote,
-  size = 'full',
-}: AppItemCardProps) {
+const STORE_ICON_MAP: Record<StoreType, keyof typeof MaterialCommunityIcons.glyphMap> = {
+  'App Store': 'apple',
+  'Google Play': 'google-play',
+  TestFlight: 'airplane',
+};
+
+export function AppItemCard({ title, description, badge, icon, storeType, url, links, size = 'full' }: AppItemCardProps) {
   const isCompact = size === 'compact';
 
-  const resolvedLinks: AppLink[] = links?.length ? links : storeType && url ? [{ storeType, url }] : [];
+  const resolvedLinks: AppLink[] = links?.length ? links : [{ storeType, url }];
 
   const handlePress = (link: AppLink) => {
     void openExternalLink(link.url, `${title} (${link.storeType})`);
@@ -68,6 +66,8 @@ export function AppItemCard({
 
       {!isCompact && <Text style={styles.description}>{description}</Text>}
 
+      {/* store label row removed */}
+
       <View style={styles.actionsRow}>
         {resolvedLinks.map((link) => {
           const Button = badge === 'live' ? PrimaryButton : SecondaryButton;
@@ -77,11 +77,6 @@ export function AppItemCard({
             </View>
           );
         })}
-        {resolvedLinks.length === 0 ? (
-          <View style={styles.pendingPill}>
-            <Text style={styles.pendingPillText}>{availabilityNote ?? 'Public link pending'}</Text>
-          </View>
-        ) : null}
       </View>
     </View>
   );
@@ -154,19 +149,5 @@ const styles = StyleSheet.create({
   actionItem: {
     flexGrow: 1,
     minWidth: 140,
-  },
-  pendingPill: {
-    alignSelf: 'flex-start',
-    backgroundColor: 'rgba(255,255,255,0.06)',
-    borderWidth: 1,
-    borderColor: THEME.colors.cardBorder,
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-  },
-  pendingPillText: {
-    color: THEME.colors.subtext,
-    fontSize: 14,
-    fontWeight: '700',
   },
 });
