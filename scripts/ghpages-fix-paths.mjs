@@ -30,6 +30,19 @@ for (const entry of fs.readdirSync(distDir)) {
   console.log('Patched', filePath);
 }
 
+const webBundleDir = path.join(distDir, '_expo', 'static', 'js', 'web');
+for (const entry of fs.readdirSync(webBundleDir)) {
+  if (!entry.endsWith('.js')) {
+    continue;
+  }
+
+  const filePath = path.join(webBundleDir, entry);
+  const bundle = fs.readFileSync(filePath, 'utf8');
+  const patchedBundle = bundle.replaceAll('uri:"/assets/', 'uri:"./assets/');
+  fs.writeFileSync(filePath, patchedBundle);
+  console.log('Patched', filePath);
+}
+
 // Prevent GitHub Pages' default Jekyll processing from hiding `_expo/`.
 fs.writeFileSync(path.join(distDir, '.nojekyll'), '');
 console.log('Wrote', path.join(distDir, '.nojekyll'));
