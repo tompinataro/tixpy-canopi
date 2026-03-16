@@ -4,7 +4,7 @@ export const THEME = {
     bg1: '#0a1020',
     card: 'rgba(255,255,255,0.06)',
     cardBorder: 'rgba(255,255,255,0.12)',
-    text: '#f5f7ff',
+    text: 'rgba(245,247,255,0.92)',
     subtext: 'rgba(245,247,255,0.72)',
     muted: 'rgba(245,247,255,0.52)',
     accentA: '#7c3aed', // violet

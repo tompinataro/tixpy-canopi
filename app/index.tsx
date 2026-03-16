@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { THEME } from '@/src/config/theme';
@@ -7,8 +7,6 @@ import { AppItemCard } from '@/src/components/AppItemCard';
 import { PageContainer } from '@/src/components/PageContainer';
 import { PlatformCard } from '@/src/components/PlatformCard';
 import { PLATFORMS } from '@/src/config/portfolio';
-
-const deviceLabel = Platform.OS === 'ios' ? 'iOS' : Platform.OS === 'android' ? 'Android' : 'Web';
 
 export default function HomeScreen() {
   return (
@@ -21,12 +19,9 @@ export default function HomeScreen() {
           style={styles.heroGlow}
         />
 
-        <Text style={styles.kicker}>Tixpy</Text>
-        <Text style={styles.title}>Canopi</Text>
-        <Text style={styles.subtitle}>A glossy portfolio container for the Tixpy app suite.</Text>
-
-        <View style={styles.deviceHint}>
-          <Text style={styles.deviceHintText}>Viewing on {deviceLabel}</Text>
+        <View style={styles.titleLine}>
+          <Text style={styles.title}>Tixpy Canopi</Text>
+          <Text style={styles.subtitle}>. . . a showcase for custom applications</Text>
         </View>
       </View>
 
@@ -36,13 +31,14 @@ export default function HomeScreen() {
           title={platform.title}
           subtitle={platform.description}
           iconName={platform.iconName}
-          href={platform.href}>
+>
           {platform.apps.map((app) => (
             <AppItemCard
               key={app.name}
               title={app.name}
               description={app.description}
               badge={app.badge}
+              icon={app.icon}
               storeType={app.storeType}
               url={app.url}
               size="compact"
@@ -73,12 +69,12 @@ const styles = StyleSheet.create({
     right: -40,
     height: 160,
   },
-  kicker: {
-    color: THEME.colors.muted,
-    fontSize: 12,
-    fontWeight: '800',
-    letterSpacing: 2.4,
-    textTransform: 'uppercase',
+  // kicker removed
+  titleLine: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'baseline',
+    gap: 10,
   },
   title: {
     fontSize: 40,
@@ -90,21 +86,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 20,
     color: THEME.colors.subtext,
-  },
-  deviceHint: {
-    alignSelf: 'flex-start',
-    backgroundColor: 'rgba(255,255,255,0.08)',
-    borderRadius: THEME.radius.pill,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderWidth: 1,
-    borderColor: THEME.colors.cardBorder,
-  },
-  deviceHintText: {
-    color: THEME.colors.muted,
-    fontSize: 12,
-    fontWeight: '800',
-    letterSpacing: 0.8,
-    textTransform: 'uppercase',
+    fontWeight: '600',
   },
 });

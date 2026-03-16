@@ -19,7 +19,7 @@ export function PageContainer({ children }: PageContainerProps) {
       />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        {children}
+        <View style={styles.inner}>{children}</View>
       </ScrollView>
     </View>
   );
@@ -32,7 +32,13 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 16,
-    gap: 16,
     paddingBottom: 36,
+    flexGrow: 1,
+  },
+  inner: {
+    width: '100%',
+    maxWidth: 860,
+    alignSelf: 'center',
+    gap: 16,
   },
 });
