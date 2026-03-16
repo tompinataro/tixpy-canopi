@@ -64,27 +64,25 @@ export function AppItemCard({
           )}
           <Text style={styles.title}>{title}</Text>
         </View>
+
+        <View style={styles.actionsInline}>
+          {resolvedLinks.map((link) => {
+            const Button = badge === 'live' ? PrimaryButton : SecondaryButton;
+            return (
+              <View key={`${title}-${link.storeType}`} style={styles.actionItem}>
+                <Button label={link.storeType} onPress={() => handlePress(link)} />
+              </View>
+            );
+          })}
+          {resolvedLinks.length === 0 ? (
+            <View style={styles.pendingPill}>
+              <Text style={styles.pendingPillText}>{availabilityNote ?? 'Public link pending'}</Text>
+            </View>
+          ) : null}
+        </View>
       </View>
 
       {!isCompact && <Text style={styles.description}>{description}</Text>}
-
-      {/* store label row removed */}
-
-      <View style={styles.actionsRow}>
-        {resolvedLinks.map((link) => {
-          const Button = badge === 'live' ? PrimaryButton : SecondaryButton;
-          return (
-            <View key={`${title}-${link.storeType}`} style={styles.actionItem}>
-              <Button label={link.storeType} onPress={() => handlePress(link)} />
-            </View>
-          );
-        })}
-        {resolvedLinks.length === 0 ? (
-          <View style={styles.pendingPill}>
-            <Text style={styles.pendingPillText}>{availabilityNote ?? 'Public link pending'}</Text>
-          </View>
-        ) : null}
-      </View>
     </View>
   );
 }
@@ -105,7 +103,6 @@ const styles = StyleSheet.create({
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     gap: 10,
   },
   titleWithIcon: {
@@ -113,6 +110,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
     flex: 1,
+    minWidth: 0,
   },
   appIcon: {
     width: 40,
@@ -146,16 +144,16 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: THEME.colors.subtext,
   },
-  // live/demo pills removed
-  // store label styles removed
-  actionsRow: {
+  actionsInline: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 10,
     flexWrap: 'wrap',
+    justifyContent: 'flex-end',
+    flexShrink: 0,
   },
   actionItem: {
-    flexGrow: 1,
-    minWidth: 140,
+    flexShrink: 0,
   },
   pendingPill: {
     alignSelf: 'flex-start',
