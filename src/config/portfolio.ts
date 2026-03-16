@@ -14,15 +14,28 @@ export type AppLink = {
   url: string;
 };
 
+export type ShowcasePreview =
+  | {
+      kind: 'video';
+      source: any;
+      label: string;
+    }
+  | {
+      kind: 'placeholder';
+      label: string;
+    };
+
 export type ShowcaseApp = {
   name: string;
   description: string;
   badge: AppBadge;
   icon: any;
+  showcaseSummary: string;
   storeType?: StoreType;
   url?: string;
   links?: AppLink[];
   availabilityNote?: string;
+  preview?: ShowcasePreview;
 };
 
 export type ShowcasePlatform = {
@@ -41,6 +54,10 @@ const ICONS = {
   routemaster: require('../../assets/app-icons/routemaster.png'),
 };
 
+const DEMOS = {
+  bloom: require('../../assets/demos/bloom-demo.mp4'),
+};
+
 export const ROUTEMASTER_PLATFORM: ShowcasePlatform = {
   slug: 'routemaster',
   href: '/routemaster',
@@ -52,22 +69,33 @@ export const ROUTEMASTER_PLATFORM: ShowcasePlatform = {
       description: 'Live RouteMaster production app in the Apple App Store.',
       badge: 'live',
       icon: ICONS.bloom,
+      showcaseSummary: 'A field-first route app for plant-care crews, with visits designed to move quickly from arrival to completion.',
       storeType: 'App Store',
       url: APP_STORE_BLOOM_URL,
       links: [
         { storeType: 'App Store', url: APP_STORE_BLOOM_URL },
       ],
+      preview: {
+        kind: 'video',
+        source: DEMOS.bloom,
+        label: 'Bloom Steward walkthrough',
+      },
     },
     {
       name: 'Pool Steward',
       description: 'RouteMaster demo build available through TestFlight.',
       badge: 'demo',
       icon: ICONS.pool,
+      showcaseSummary: 'Checklist-driven pool service flow with check-in, completion notes, and an interface tuned for technicians in motion.',
       storeType: 'TestFlight',
       url: TESTFLIGHT_POOL_URL,
       links: [
         { storeType: 'TestFlight', url: TESTFLIGHT_POOL_URL },
       ],
+      preview: {
+        kind: 'placeholder',
+        label: 'Pool Steward screen recording coming soon',
+      },
     },
   ],
 };
@@ -83,14 +111,24 @@ export const VALET_BALLET_PLATFORM: ShowcasePlatform = {
       description: 'Public store link pending while the Google Play release is not yet live.',
       badge: 'live',
       icon: ICONS.pulltab,
+      showcaseSummary: 'A compact operations workflow for pull-tab teams, built around quick visual status and low-friction task handling.',
       availabilityNote: 'Google Play link pending',
+      preview: {
+        kind: 'placeholder',
+        label: 'Pull-Tab Valet screen recording coming soon',
+      },
     },
     {
       name: 'DVD Valet',
       description: 'Public iOS link pending while the TestFlight/App Store URL is not yet configured.',
       badge: 'demo',
       icon: ICONS.dvd,
+      showcaseSummary: 'A physical-media management concept with a cleaner path for cataloging, handoff, and service-side inventory tracking.',
       availabilityNote: 'Public link pending',
+      preview: {
+        kind: 'placeholder',
+        label: 'DVD Valet screen recording coming soon',
+      },
     },
   ],
 };
