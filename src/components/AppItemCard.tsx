@@ -40,7 +40,14 @@ export function AppItemCard({ title, description, badge, icon, storeType, url, l
       <View style={styles.headerRow}>
         <View style={styles.titleWithIcon}>
           {icon ? (
-            <Image source={icon} style={styles.appIconImage} accessibilityLabel={`${title} icon`} />
+            <View style={styles.appIcon}>
+              <Image
+                source={icon}
+                style={styles.appIconImage}
+                resizeMode="contain"
+                accessibilityLabel={`${title} icon`}
+              />
+            </View>
           ) : (
             <View style={styles.appIcon}>
               <Text style={styles.appIconText}>
@@ -111,9 +118,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   appIconImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
+    width: 36,
+    height: 36,
+    borderRadius: 8,
   },
   appIconText: {
     color: THEME.colors.muted,
