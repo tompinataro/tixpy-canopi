@@ -30,7 +30,6 @@ export default function HomeScreen() {
           key={platform.slug}
           title={platform.title}
           subtitle={platform.description}
-          iconName={platform.iconName}
 >
           {platform.apps.map((app) => (
             <AppItemCard

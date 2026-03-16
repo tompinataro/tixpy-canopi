@@ -1,5 +1,4 @@
 import type { Href } from 'expo-router';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import {
   APP_STORE_BLOOM_URL,
@@ -36,7 +35,6 @@ export type ShowcasePlatform = {
   href: Href;
   title: string;
   description: string;
-  iconName: keyof typeof MaterialCommunityIcons.glyphMap;
   apps: ShowcaseApp[];
 };
 
@@ -53,7 +51,6 @@ export const ROUTEMASTER_PLATFORM: ShowcasePlatform = {
   href: '/routemaster',
   title: 'RouteMaster',
   description: '… customized mobile dashboards for offsite workflows',
-  iconName: 'map-marker-path',
   apps: [
     {
       name: 'Bloom Steward',
@@ -85,7 +82,6 @@ export const VALET_BALLET_PLATFORM: ShowcasePlatform = {
   href: '/valetballet',
   title: 'Valet Ballet',
   description: '… desktop and mobile platforms to account for goods and services',
-  iconName: 'car-shift-pattern',
   apps: [
     {
       name: 'Pull-Tab Valet',
