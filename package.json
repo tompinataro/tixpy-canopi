@@ -7,7 +7,9 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "branding:generate": "node scripts/generate-branding-assets.mjs"
+    "branding:generate": "node scripts/generate-branding-assets.mjs",
+    "export:web": "npx expo export -p web",
+    "ghpages:patch": "node scripts/ghpages-fix-paths.mjs"
   },
   "dependencies": {
     "@react-navigation/native": "^7.1.28",
