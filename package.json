@@ -12,6 +12,7 @@
     "ghpages:patch": "node scripts/ghpages-fix-paths.mjs"
   },
   "dependencies": {
+    "@expo/vector-icons": "^15.1.1",
     "@react-navigation/native": "^7.1.28",
     "expo": "~55.0.5",
     "expo-constants": "~55.0.7",

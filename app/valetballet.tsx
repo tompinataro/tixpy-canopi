@@ -16,8 +16,6 @@ export default function ValetBalletScreen() {
           description={app.description}
           badge={app.badge}
           icon={app.icon}
-          storeType={app.storeType}
-          url={app.url}
           links={app.links}
           availabilityNote={app.availabilityNote}
           size="full"

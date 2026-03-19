@@ -1,12 +1,20 @@
-// App Store URL for Bloom Steward.
+// Public destination URLs only. Do not point these at App Store Connect or other internal dashboards.
 export const APP_STORE_BLOOM_URL = 'https://apps.apple.com/us/app/id6752444086';
 
-// Previous public Play URL candidate for Pull-Tab Valet.
-// Audit on 2026-03-16: this public listing returns HTTP 404 and is not used in the UI.
-export const GOOGLE_PLAY_PTV_URL = 'https://play.google.com/store/apps/details?id=com.tixpy.pulltabvalet';
+export const GOOGLE_PLAY_BLOOM_URL: string | null =
+  'https://play.google.com/store/apps/details?id=com.tompinataro.bloomsteward';
+export const DEMO_BLOOM_URL: string | null = null;
 
-// TestFlight public join URL for Pool Steward.
-export const TESTFLIGHT_POOL_URL = 'https://testflight.apple.com/join/u5BkMurF';
+export const APP_STORE_POOL_URL: string | null = 'https://apps.apple.com/us/app/id6759060509';
+export const GOOGLE_PLAY_POOL_URL: string | null = null;
+export const DEMO_POOL_URL: string | null = null;
 
-// TODO: Replace with the real public URL for DVD Valet before wiring it into the UI.
-export const TESTFLIGHT_DVD_URL = 'https://example.com/TESTFLIGHT_DVD_URL';
+export const APP_STORE_PULLTAB_URL: string | null = 'https://apps.apple.com/us/app/id6759136513';
+export const GOOGLE_PLAY_PULLTAB_URL: string | null =
+  'https://play.google.com/store/apps/details?id=com.tixpy.pulltabvalet';
+export const MACOS_PULLTAB_URL: string | null = null;
+export const DEMO_PULLTAB_URL: string | null = null;
+
+export const APP_STORE_DVD_URL: string | null = 'https://apps.apple.com/us/app/id6759878534';
+export const GOOGLE_PLAY_DVD_URL: string | null = null;
+export const DEMO_DVD_URL: string | null = null;

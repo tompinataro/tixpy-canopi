@@ -2,16 +2,27 @@ import type { Href } from 'expo-router';
 
 import {
   APP_STORE_BLOOM_URL,
-  TESTFLIGHT_POOL_URL,
+  APP_STORE_DVD_URL,
+  APP_STORE_POOL_URL,
+  APP_STORE_PULLTAB_URL,
+  MACOS_PULLTAB_URL,
+  DEMO_BLOOM_URL,
+  DEMO_DVD_URL,
+  DEMO_POOL_URL,
+  DEMO_PULLTAB_URL,
+  GOOGLE_PLAY_BLOOM_URL,
+  GOOGLE_PLAY_DVD_URL,
+  GOOGLE_PLAY_POOL_URL,
+  GOOGLE_PLAY_PULLTAB_URL,
 } from '@/src/config/links';
 
 export type AppBadge = 'live' | 'demo';
 
-export type StoreType = 'App Store' | 'Google Play' | 'TestFlight';
+export type AppActionType = 'appStore' | 'googlePlay' | 'macos' | 'demo';
 
 export type AppLink = {
-  storeType: StoreType;
-  url: string;
+  type: AppActionType;
+  url?: string | null;
 };
 
 export type ShowcaseApp = {
@@ -19,8 +30,6 @@ export type ShowcaseApp = {
   description: string;
   badge: AppBadge;
   icon: any;
-  storeType?: StoreType;
-  url?: string;
   links?: AppLink[];
   availabilityNote?: string;
 };
@@ -41,6 +50,20 @@ const ICONS = {
   routemaster: require('../../assets/app-icons/routemaster.png'),
 };
 
+function createActionLinks(urls: {
+  appStore?: string | null;
+  googlePlay?: string | null;
+  macos?: string | null;
+  demo?: string | null;
+}): AppLink[] {
+  return [
+    { type: 'appStore', url: urls.appStore ?? null },
+    { type: 'googlePlay', url: urls.googlePlay ?? null },
+    { type: 'macos', url: urls.macos ?? null },
+    { type: 'demo', url: urls.demo ?? null },
+  ];
+}
+
 export const ROUTEMASTER_PLATFORM: ShowcasePlatform = {
   slug: 'routemaster',
   href: '/routemaster',
@@ -49,25 +72,27 @@ export const ROUTEMASTER_PLATFORM: ShowcasePlatform = {
   apps: [
     {
       name: 'Bloom Steward',
-      description: 'Live RouteMaster production app in the Apple App Store.',
+      description: 'RouteMaster production app with direct public listing links as they become available.',
       badge: 'live',
       icon: ICONS.bloom,
-      storeType: 'App Store',
-      url: APP_STORE_BLOOM_URL,
-      links: [
-        { storeType: 'App Store', url: APP_STORE_BLOOM_URL },
-      ],
+      links: createActionLinks({
+        appStore: APP_STORE_BLOOM_URL,
+        googlePlay: GOOGLE_PLAY_BLOOM_URL,
+        demo: DEMO_BLOOM_URL,
+      }),
+      availabilityNote: 'Google Play and demo links pending',
     },
     {
       name: 'Pool Steward',
-      description: 'RouteMaster demo build available through TestFlight.',
-      badge: 'demo',
+      description: 'RouteMaster app card prepared for direct App Store, Google Play, and demo links.',
+      badge: 'live',
       icon: ICONS.pool,
-      storeType: 'TestFlight',
-      url: TESTFLIGHT_POOL_URL,
-      links: [
-        { storeType: 'TestFlight', url: TESTFLIGHT_POOL_URL },
-      ],
+      links: createActionLinks({
+        appStore: APP_STORE_POOL_URL,
+        googlePlay: GOOGLE_PLAY_POOL_URL,
+        demo: DEMO_POOL_URL,
+      }),
+      availabilityNote: 'Links now live (App Store / Play as available)',
     },
   ],
 };
@@ -80,17 +105,28 @@ export const VALET_BALLET_PLATFORM: ShowcasePlatform = {
   apps: [
     {
       name: 'Pull-Tab Valet',
-      description: 'Public store link pending while the Google Play release is not yet live.',
+      description: 'Valet Ballet app card prepared for direct App Store, Google Play, macOS, and demo links.',
       badge: 'live',
       icon: ICONS.pulltab,
-      availabilityNote: 'Google Play link pending',
+      links: createActionLinks({
+        appStore: APP_STORE_PULLTAB_URL,
+        googlePlay: GOOGLE_PLAY_PULLTAB_URL,
+        macos: MACOS_PULLTAB_URL,
+        demo: DEMO_PULLTAB_URL,
+      }),
+      availabilityNote: 'macOS link pending',
     },
     {
       name: 'DVD Valet',
-      description: 'Public iOS link pending while the TestFlight/App Store URL is not yet configured.',
+      description: 'Valet Ballet app card prepared for direct App Store, Google Play, and demo links.',
       badge: 'demo',
       icon: ICONS.dvd,
-      availabilityNote: 'Public link pending',
+      links: createActionLinks({
+        appStore: APP_STORE_DVD_URL,
+        googlePlay: GOOGLE_PLAY_DVD_URL,
+        demo: DEMO_DVD_URL,
+      }),
+      availabilityNote: 'Public store and demo links pending',
     },
   ],
 };

@@ -1,18 +1,15 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { AppBadge, AppLink, StoreType } from '@/src/config/portfolio';
+import { AppBadge, AppLink, AppActionType } from '@/src/config/portfolio';
 import { THEME } from '@/src/config/theme';
 import { openExternalLink } from '@/src/utils/openExternalLink';
-import { PrimaryButton } from '@/src/components/PrimaryButton';
-import { SecondaryButton } from '@/src/components/SecondaryButton';
 
 type AppItemCardProps = {
   title: string;
   description: string;
   badge: AppBadge;
   icon?: any;
-  storeType?: StoreType;
-  url?: string;
   links?: AppLink[];
   availabilityNote?: string;
   size?: 'compact' | 'full';
@@ -23,66 +20,101 @@ export function AppItemCard({
   description,
   badge,
   icon,
-  storeType,
-  url,
   links,
   availabilityNote,
   size = 'full',
 }: AppItemCardProps) {
   const isCompact = size === 'compact';
-
-  const resolvedLinks: AppLink[] = links?.length ? links : storeType && url ? [{ storeType, url }] : [];
+  const resolvedLinks: AppLink[] = links?.length ? links : [];
 
   const handlePress = (link: AppLink) => {
-    void openExternalLink(link.url, `${title} (${link.storeType})`);
+    if (!link.url) {
+      return;
+    }
+    void openExternalLink(link.url, `${title} (${link.type})`);
+  };
+
+  const renderActionContents = (type: AppActionType, disabled: boolean) => {
+    const tintColor = disabled ? THEME.colors.muted : THEME.colors.text;
+
+    if (type === 'appStore') {
+      return <Ionicons name="logo-apple" size={20} color={tintColor} />;
+    }
+
+    if (type === 'googlePlay') {
+      return <FontAwesome5 name="google-play" size={16} color={tintColor} />;
+    }
+
+    if (type === 'macos') {
+      return (
+        <Text style={[styles.actionLabel, disabled && styles.actionLabelDisabled]}>
+          macOS
+        </Text>
+      );
+    }
+
+    return (
+      <Text style={[styles.actionLabel, disabled && styles.actionLabelDisabled]}>
+        Demo
+      </Text>
+    );
   };
 
   return (
     <View style={[styles.card, isCompact && styles.compactCard]}>
-      <View style={styles.headerRow}>
-        <View style={styles.titleWithIcon}>
-          {icon ? (
-            <View style={styles.appIcon}>
-              <Image
-                source={icon}
-                style={styles.appIconImage}
-                resizeMode="contain"
-                accessibilityLabel={`${title} icon`}
-              />
-            </View>
-          ) : (
-            <View style={styles.appIcon}>
-              <Text style={styles.appIconText}>
-                {title
-                  .split(' ')
-                  .filter(Boolean)
-                  .slice(0, 2)
-                  .map((w) => w[0]!.toUpperCase())
-                  .join('')}
-              </Text>
-            </View>
-          )}
-          <Text style={styles.title}>{title}</Text>
-        </View>
-
-        <View style={styles.actionsInline}>
-          {resolvedLinks.map((link) => {
-            const Button = badge === 'live' ? PrimaryButton : SecondaryButton;
-            return (
-              <View key={`${title}-${link.storeType}`} style={styles.actionItem}>
-                <Button label={link.storeType} onPress={() => handlePress(link)} />
-              </View>
-            );
-          })}
-          {resolvedLinks.length === 0 ? (
-            <View style={styles.pendingPill}>
-              <Text style={styles.pendingPillText}>{availabilityNote ?? 'Public link pending'}</Text>
-            </View>
-          ) : null}
-        </View>
+      <View style={styles.titleWithIcon}>
+        {icon ? (
+          <View style={styles.appIcon}>
+            <Image
+              source={icon}
+              style={styles.appIconImage}
+              resizeMode="contain"
+              accessibilityLabel={`${title} icon`}
+            />
+          </View>
+        ) : (
+          <View style={styles.appIcon}>
+            <Text style={styles.appIconText}>
+              {title
+                .split(' ')
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((w) => w[0]!.toUpperCase())
+                .join('')}
+            </Text>
+          </View>
+        )}
+        <Text style={styles.title}>{title}</Text>
       </View>
 
       {!isCompact && <Text style={styles.description}>{description}</Text>}
+
+      <View style={styles.actionsRow}>
+        {resolvedLinks.map((link) => {
+          const disabled = !link.url;
+          return (
+            <Pressable
+              key={`${title}-${link.type}`}
+              onPress={() => handlePress(link)}
+              disabled={disabled}
+              accessibilityRole="button"
+              accessibilityLabel={`${title} ${link.type}`}
+              style={({ pressed }) => [
+                styles.actionButton,
+                badge === 'live' ? styles.actionButtonLive : styles.actionButtonDemo,
+                disabled && styles.actionButtonDisabled,
+                pressed && !disabled && styles.actionButtonPressed,
+              ]}
+            >
+              {renderActionContents(link.type, disabled)}
+            </Pressable>
+          );
+        })}
+      </View>
+
+      {availabilityNote ? (
+        <Text style={styles.availabilityNote}>{availabilityNote}</Text>
+      ) : null}
     </View>
   );
 }
@@ -99,11 +131,6 @@ const styles = StyleSheet.create({
   },
   compactCard: {
     padding: 12,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
   },
   titleWithIcon: {
     flexDirection: 'row',
@@ -144,29 +171,47 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: THEME.colors.subtext,
   },
-  actionsInline: {
+  actionsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    flexWrap: 'wrap',
-    justifyContent: 'flex-end',
-    flexShrink: 0,
+    width: '100%',
   },
-  actionItem: {
-    flexShrink: 0,
-  },
-  pendingPill: {
-    alignSelf: 'flex-start',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+  actionButton: {
+    flex: 1,
+    minHeight: 44,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: THEME.colors.cardBorder,
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 12,
   },
-  pendingPillText: {
-    color: THEME.colors.subtext,
+  actionButtonLive: {
+    backgroundColor: 'rgba(34,197,94,0.12)',
+    borderColor: 'rgba(34,197,94,0.35)',
+  },
+  actionButtonDemo: {
+    backgroundColor: 'rgba(245,158,11,0.10)',
+    borderColor: 'rgba(245,158,11,0.28)',
+  },
+  actionButtonDisabled: {
+    backgroundColor: 'rgba(255,255,255,0.04)',
+    borderColor: THEME.colors.cardBorder,
+  },
+  actionButtonPressed: {
+    opacity: 0.86,
+  },
+  actionLabel: {
+    color: THEME.colors.text,
     fontSize: 14,
     fontWeight: '700',
+  },
+  actionLabelDisabled: {
+    color: THEME.colors.muted,
+  },
+  availabilityNote: {
+    fontSize: 12,
+    lineHeight: 18,
+    color: THEME.colors.muted,
   },
 });
