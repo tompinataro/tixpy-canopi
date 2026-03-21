@@ -1,4 +1,5 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import type { GestureResponderEvent } from 'react-native';
 
 import { AppBadge, AppLink, AppActionType } from '@/src/config/portfolio';
 import { THEME } from '@/src/config/theme';
@@ -29,11 +30,11 @@ export function AppItemCard({
   const actionLabelStyle = [styles.actionLabel, isCompact && styles.compactActionLabel];
   const familyTone = variant ? CARD_TONES[variant] : null;
 
-  const handlePress = (link: AppLink) => {
+  const handlePress = (link: AppLink, event?: GestureResponderEvent) => {
     if (!link.url) {
       return;
     }
-    void openExternalLink(link.url, `${title} (${link.type})`);
+    void openExternalLink(link.url, `${title} (${link.type})`, event);
   };
 
   const renderActionContents = (type: AppActionType, disabled: boolean) => {
@@ -108,7 +109,7 @@ export function AppItemCard({
             return (
               <Pressable
                 key={`${title}-${link.type}`}
-                onPress={() => handlePress(link)}
+                onPress={(event) => handlePress(link, event)}
                 disabled={disabled}
                 accessibilityRole="button"
                 accessibilityLabel={`${title} ${link.type}`}

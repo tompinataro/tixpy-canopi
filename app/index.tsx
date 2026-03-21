@@ -22,7 +22,7 @@ export default function HomeScreen() {
         <View style={styles.titleLine}>
           <View style={styles.heroLogo} accessible accessibilityLabel="Tixpy Canopi logo">
             <Image
-              source={require('../assets/tixpy-canopi-canopy-only.png')}
+              source={require('../assets/app-icons/tixpy-canopi-app-icon-latest.png')}
               style={styles.heroLogoImage}
               resizeMode="contain"
             />
