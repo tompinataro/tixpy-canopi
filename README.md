@@ -18,7 +18,8 @@ Home (`/`) shows:
     - Bloom Steward (`live`) -> App Store button
     - Pool Steward (`demo`) -> TestFlight button
   - Valet Ballet
-    - Pull-Tab Valet (`live`) -> Google Play button
+    - Pull-Tab Valet (`live`) -> App Store + Google Play buttons
+    - Pull-Tab Valet Desktop (`live`) -> macOS button
     - DVD Valet (`demo`) -> TestFlight button
 
 Platform pages:

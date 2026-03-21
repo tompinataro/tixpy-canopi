@@ -12,6 +12,7 @@ export default function RouteMasterScreen() {
       {ROUTEMASTER_PLATFORM.apps.map((app) => (
         <AppItemCard
           key={app.name}
+          variant={ROUTEMASTER_PLATFORM.slug}
           title={app.name}
           description={app.description}
           badge={app.badge}

@@ -5,12 +5,16 @@ import { ScrollViewStyleReset } from 'expo-router/html';
 // The contents of this function only run in Node.js environments and
 // do not have access to the DOM or browser APIs.
 export default function Root({ children }: { children: React.ReactNode }) {
+  const faviconVersion = '20260321c';
+
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="application-name" content="Tixpy-Canopi" />
+        <meta name="apple-mobile-web-app-title" content="Tixpy-Canopi" />
 
         {/* 
           Disable body scrolling on web. This makes ScrollView components work closer to how they do on native. 
@@ -18,7 +22,45 @@ export default function Root({ children }: { children: React.ReactNode }) {
         */}
         <ScrollViewStyleReset />
 
-        <title>Portfolio | Tom Pinataro</title>
+        <title>Tixpy-Canopi</title>
+        <link
+          rel="icon"
+          type="image/x-icon"
+          sizes="any"
+          href={`/tixpy-canopi-tab.ico?v=${faviconVersion}`}
+        />
+        <link rel="shortcut icon" href={`/tixpy-canopi-tab.ico?v=${faviconVersion}`} />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href={`/assets/branding/tixpy-canopi-favicon-32.png?v=${faviconVersion}`}
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href={`/assets/branding/tixpy-canopi-favicon-16.png?v=${faviconVersion}`}
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href={`/assets/branding/tixpy-canopi-icon-180.png?v=${faviconVersion}`}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function () {
+                var title = 'Tixpy-Canopi';
+                document.title = title;
+                var managedTitle = document.querySelector('title[data-rh="true"]');
+                if (managedTitle && !managedTitle.textContent) {
+                  managedTitle.textContent = title;
+                }
+              })();
+            `,
+          }}
+        />
         {/* Using raw CSS styles as an escape-hatch to ensure the background color never flickers in dark-mode. */}
         <style dangerouslySetInnerHTML={{ __html: responsiveBackground }} />
         {/* Add any additional <head> elements that you want globally available on web... */}

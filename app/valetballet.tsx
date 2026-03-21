@@ -12,6 +12,7 @@ export default function ValetBalletScreen() {
       {VALET_BALLET_PLATFORM.apps.map((app) => (
         <AppItemCard
           key={app.name}
+          variant={VALET_BALLET_PLATFORM.slug}
           title={app.name}
           description={app.description}
           badge={app.badge}

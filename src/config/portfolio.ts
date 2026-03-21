@@ -56,12 +56,17 @@ function createActionLinks(urls: {
   macos?: string | null;
   demo?: string | null;
 }): AppLink[] {
-  return [
+  const links: AppLink[] = [
     { type: 'appStore', url: urls.appStore ?? null },
     { type: 'googlePlay', url: urls.googlePlay ?? null },
-    { type: 'macos', url: urls.macos ?? null },
     { type: 'demo', url: urls.demo ?? null },
   ];
+
+  if (urls.macos) {
+    links.splice(2, 0, { type: 'macos', url: urls.macos });
+  }
+
+  return links;
 }
 
 export const ROUTEMASTER_PLATFORM: ShowcasePlatform = {
@@ -105,16 +110,27 @@ export const VALET_BALLET_PLATFORM: ShowcasePlatform = {
   apps: [
     {
       name: 'Pull-Tab Valet',
-      description: 'Valet Ballet app card prepared for direct App Store, Google Play, macOS, and demo links.',
+      description: 'Valet Ballet mobile app card prepared for direct App Store, Google Play, and demo links.',
       badge: 'live',
       icon: ICONS.pulltab,
       links: createActionLinks({
         appStore: APP_STORE_PULLTAB_URL,
         googlePlay: GOOGLE_PLAY_PULLTAB_URL,
-        macos: MACOS_PULLTAB_URL,
         demo: DEMO_PULLTAB_URL,
       }),
-      availabilityNote: 'macOS link pending',
+      availabilityNote: 'Mobile store links live',
+    },
+    {
+      name: 'Pull-Tab Valet Desktop',
+      description: 'The Pull-Tab Valet desktop app with direct macOS download access.',
+      badge: 'live',
+      icon: ICONS.pulltab,
+      links: [
+        { type: 'macos', url: MACOS_PULLTAB_URL },
+        { type: 'googlePlay', url: GOOGLE_PLAY_PULLTAB_URL },
+        { type: 'demo', url: DEMO_PULLTAB_URL },
+      ],
+      availabilityNote: 'Same Pull-Tab Valet app, available for macOS',
     },
     {
       name: 'DVD Valet',

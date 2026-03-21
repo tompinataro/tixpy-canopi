@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { THEME } from '@/src/config/theme';
@@ -20,20 +20,35 @@ export default function HomeScreen() {
         />
 
         <View style={styles.titleLine}>
-          <Text style={styles.title}>Tixpy Canopi</Text>
-          <Text style={styles.subtitle}>. . . a showcase for custom applications by Tom Pinataro</Text>
+          <View style={styles.heroLogo} accessible accessibilityLabel="Tixpy Canopi logo">
+            <Image
+              source={require('../assets/tixpy-canopi-canopy-only.png')}
+              style={styles.heroLogoImage}
+              resizeMode="contain"
+            />
+            <View style={styles.heroLogoTextWrap}>
+              <Text style={styles.heroLogoLineOne}>Tixpy</Text>
+              <Text style={styles.heroLogoLineTwo}>Canopi</Text>
+            </View>
+          </View>
+          <View style={styles.titleCopy}>
+            <Text style={styles.title}>Tixpy Canopi</Text>
+            <Text style={styles.subtitle}>. . . a showcase of custom apps by Tom Pinataro</Text>
+          </View>
         </View>
       </View>
 
       {PLATFORMS.map((platform) => (
         <PlatformCard
           key={platform.slug}
+          variant={platform.slug}
           title={platform.title}
           subtitle={platform.description}
 >
           {platform.apps.map((app) => (
             <AppItemCard
               key={app.name}
+              variant={platform.slug}
               title={app.name}
               description={app.description}
               badge={app.badge}
@@ -51,9 +66,9 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   hero: {
-    marginBottom: 10,
-    gap: 8,
-    padding: 16,
+    marginBottom: 2,
+    gap: 6,
+    padding: 14,
     borderRadius: THEME.radius.lg,
     borderWidth: 1,
     borderColor: THEME.colors.cardBorder,
@@ -71,20 +86,66 @@ const styles = StyleSheet.create({
   // kicker removed
   titleLine: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: 12,
+  },
+  heroLogo: {
+    width: 72,
+    height: 54,
+    flexShrink: 0,
+    position: 'relative',
+    borderRadius: 18,
+    backgroundColor: '#f2e8dc',
+    borderWidth: 1,
+    borderColor: 'rgba(143,28,60,0.10)',
+    overflow: 'hidden',
+  },
+  heroLogoImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 18,
+  },
+  heroLogoTextWrap: {
+    position: 'absolute',
+    top: 14,
+    bottom: 4,
+    left: 14,
+    right: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  heroLogoLineOne: {
+    fontSize: 11,
+    lineHeight: 11,
+    color: '#8f1c3c',
+    fontFamily: 'Monotype Corsiva, Apple Chancery, Snell Roundhand, cursive',
+  },
+  heroLogoLineTwo: {
+    marginTop: 0,
+    fontSize: 14,
+    lineHeight: 14,
+    color: '#8f1c3c',
+    fontFamily: 'Monotype Corsiva, Apple Chancery, Snell Roundhand, cursive',
+  },
+  titleCopy: {
+    flex: 1,
+    minWidth: 0,
+    flexDirection: 'row',
     alignItems: 'baseline',
     gap: 10,
   },
   title: {
-    fontSize: 40,
+    fontSize: 33,
     fontWeight: '900',
     color: THEME.colors.text,
     letterSpacing: -0.6,
+    flexShrink: 0,
   },
   subtitle: {
     fontSize: 15,
     lineHeight: 20,
     color: THEME.colors.subtext,
     fontWeight: '600',
+    flexShrink: 1,
   },
 });

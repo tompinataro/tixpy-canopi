@@ -1,4 +1,3 @@
-import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { AppBadge, AppLink, AppActionType } from '@/src/config/portfolio';
@@ -6,6 +5,7 @@ import { THEME } from '@/src/config/theme';
 import { openExternalLink } from '@/src/utils/openExternalLink';
 
 type AppItemCardProps = {
+  variant?: 'routemaster' | 'valetballet';
   title: string;
   description: string;
   badge: AppBadge;
@@ -16,16 +16,18 @@ type AppItemCardProps = {
 };
 
 export function AppItemCard({
+  variant,
   title,
-  description,
   badge,
   icon,
   links,
-  availabilityNote,
   size = 'full',
 }: AppItemCardProps) {
   const isCompact = size === 'compact';
   const resolvedLinks: AppLink[] = links?.length ? links : [];
+  const titleStyle = [styles.title, isCompact && styles.compactTitle];
+  const actionLabelStyle = [styles.actionLabel, isCompact && styles.compactActionLabel];
+  const familyTone = variant ? CARD_TONES[variant] : null;
 
   const handlePress = (link: AppLink) => {
     if (!link.url) {
@@ -35,86 +37,95 @@ export function AppItemCard({
   };
 
   const renderActionContents = (type: AppActionType, disabled: boolean) => {
-    const tintColor = disabled ? THEME.colors.muted : THEME.colors.text;
-
     if (type === 'appStore') {
-      return <Ionicons name="logo-apple" size={20} color={tintColor} />;
+      return (
+        <Text style={[actionLabelStyle, disabled && styles.actionLabelDisabled]}>
+          App Store
+        </Text>
+      );
     }
 
     if (type === 'googlePlay') {
-      return <FontAwesome5 name="google-play" size={16} color={tintColor} />;
+      return (
+        <Text style={[actionLabelStyle, disabled && styles.actionLabelDisabled]}>
+          Google Play
+        </Text>
+      );
     }
 
     if (type === 'macos') {
       return (
-        <Text style={[styles.actionLabel, disabled && styles.actionLabelDisabled]}>
+        <Text style={[actionLabelStyle, disabled && styles.actionLabelDisabled]}>
           macOS
         </Text>
       );
     }
 
     return (
-      <Text style={[styles.actionLabel, disabled && styles.actionLabelDisabled]}>
+      <Text style={[actionLabelStyle, disabled && styles.actionLabelDisabled]}>
         Demo
       </Text>
     );
   };
 
   return (
-    <View style={[styles.card, isCompact && styles.compactCard]}>
-      <View style={styles.titleWithIcon}>
-        {icon ? (
-          <View style={styles.appIcon}>
-            <Image
-              source={icon}
-              style={styles.appIconImage}
-              resizeMode="contain"
-              accessibilityLabel={`${title} icon`}
-            />
-          </View>
-        ) : (
-          <View style={styles.appIcon}>
-            <Text style={styles.appIconText}>
-              {title
-                .split(' ')
-                .filter(Boolean)
-                .slice(0, 2)
-                .map((w) => w[0]!.toUpperCase())
-                .join('')}
-            </Text>
-          </View>
-        )}
-        <Text style={styles.title}>{title}</Text>
+    <View
+      style={[
+        styles.card,
+        isCompact && styles.compactCard,
+        familyTone?.card,
+      ]}
+    >
+      <View style={styles.headerRow}>
+        <View style={styles.titleWithIcon}>
+          {icon ? (
+            <View style={[styles.appIcon, familyTone?.appIcon]}>
+              <Image
+                source={icon}
+                style={styles.appIconImage}
+                resizeMode="contain"
+                accessibilityLabel={`${title} icon`}
+              />
+            </View>
+          ) : (
+            <View style={[styles.appIcon, familyTone?.appIcon]}>
+              <Text style={styles.appIconText}>
+                {title
+                  .split(' ')
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .map((w) => w[0]!.toUpperCase())
+                  .join('')}
+              </Text>
+            </View>
+          )}
+          <Text style={titleStyle}>{title}</Text>
+        </View>
+
+        <View style={styles.actionsRow}>
+          {resolvedLinks.map((link) => {
+            const disabled = !link.url;
+            return (
+              <Pressable
+                key={`${title}-${link.type}`}
+                onPress={() => handlePress(link)}
+                disabled={disabled}
+                accessibilityRole="button"
+                accessibilityLabel={`${title} ${link.type}`}
+                style={({ pressed }) => [
+                  styles.actionButton,
+                  badge === 'live' ? styles.actionButtonLive : styles.actionButtonDemo,
+                  disabled && styles.actionButtonDisabled,
+                  pressed && !disabled && styles.actionButtonPressed,
+                ]}
+              >
+                {renderActionContents(link.type, disabled)}
+              </Pressable>
+            );
+          })}
+        </View>
       </View>
 
-      {!isCompact && <Text style={styles.description}>{description}</Text>}
-
-      <View style={styles.actionsRow}>
-        {resolvedLinks.map((link) => {
-          const disabled = !link.url;
-          return (
-            <Pressable
-              key={`${title}-${link.type}`}
-              onPress={() => handlePress(link)}
-              disabled={disabled}
-              accessibilityRole="button"
-              accessibilityLabel={`${title} ${link.type}`}
-              style={({ pressed }) => [
-                styles.actionButton,
-                badge === 'live' ? styles.actionButtonLive : styles.actionButtonDemo,
-                disabled && styles.actionButtonDisabled,
-                pressed && !disabled && styles.actionButtonPressed,
-              ]}
-            >
-              {renderActionContents(link.type, disabled)}
-            </Pressable>
-          );
-        })}
-      </View>
-
-      {availabilityNote ? (
-        <Text style={styles.availabilityNote}>{availabilityNote}</Text>
-      ) : null}
     </View>
   );
 }
@@ -125,12 +136,18 @@ const styles = StyleSheet.create({
     borderRadius: THEME.radius.md,
     borderWidth: 1,
     borderColor: THEME.colors.cardBorder,
-    padding: 14,
-    gap: 10,
+    padding: 12,
+    gap: 8,
     ...THEME.shadow.soft,
   },
   compactCard: {
-    padding: 12,
+    padding: 10,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    width: '100%',
   },
   titleWithIcon: {
     flexDirection: 'row',
@@ -166,25 +183,25 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: THEME.colors.text,
   },
-  description: {
-    fontSize: 14,
-    lineHeight: 20,
-    color: THEME.colors.subtext,
+  compactTitle: {
+    fontSize: 16,
   },
   actionsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    width: '100%',
+    justifyContent: 'flex-end',
+    gap: 5,
+    flexShrink: 0,
   },
   actionButton: {
-    flex: 1,
-    minHeight: 44,
-    borderRadius: 12,
+    minHeight: 32,
+    borderRadius: THEME.radius.pill,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    flexShrink: 0,
   },
   actionButtonLive: {
     backgroundColor: 'rgba(34,197,94,0.12)',
@@ -203,15 +220,37 @@ const styles = StyleSheet.create({
   },
   actionLabel: {
     color: THEME.colors.text,
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: 12,
+    fontWeight: '800',
+    letterSpacing: 0.1,
+  },
+  compactActionLabel: {
+    fontSize: 11,
   },
   actionLabelDisabled: {
     color: THEME.colors.muted,
   },
-  availabilityNote: {
-    fontSize: 12,
-    lineHeight: 18,
-    color: THEME.colors.muted,
-  },
 });
+
+const CARD_TONES = {
+  routemaster: StyleSheet.create({
+    card: {
+      backgroundColor: 'rgba(18, 49, 66, 0.32)',
+      borderColor: 'rgba(34, 211, 238, 0.22)',
+    },
+    appIcon: {
+      backgroundColor: 'rgba(34, 211, 238, 0.10)',
+      borderColor: 'rgba(34, 211, 238, 0.24)',
+    },
+  }),
+  valetballet: StyleSheet.create({
+    card: {
+      backgroundColor: 'rgba(46, 23, 68, 0.32)',
+      borderColor: 'rgba(168, 85, 247, 0.22)',
+    },
+    appIcon: {
+      backgroundColor: 'rgba(168, 85, 247, 0.10)',
+      borderColor: 'rgba(168, 85, 247, 0.24)',
+    },
+  }),
+} as const;

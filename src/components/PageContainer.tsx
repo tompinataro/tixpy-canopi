@@ -32,13 +32,13 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 16,
-    paddingBottom: 36,
+    paddingBottom: 28,
     flexGrow: 1,
   },
   inner: {
     width: '100%',
     maxWidth: 860,
     alignSelf: 'center',
-    gap: 16,
+    gap: 12,
   },
 });

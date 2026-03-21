@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 const distDir = 'dist';
+const projectBase = '/tixpy-canopi';
 
 function patchHtml(html) {
   // GitHub Pages project sites are served from /<repo>/.
@@ -15,8 +16,24 @@ function patchHtml(html) {
     .replaceAll("href='/assets/", "href='./assets/")
     .replaceAll('src="/assets/', 'src="./assets/')
     .replaceAll("src='/assets/", "src='./assets/")
-    .replaceAll('href="/favicon.ico"', 'href="./favicon.ico"')
-    .replaceAll("href='/favicon.ico'", "href='./favicon.ico'");
+    .replaceAll('href="/favicon.ico"', `href="${projectBase}/tixpy-canopi-tab.ico"`)
+    .replaceAll("href='/favicon.ico'", `href='${projectBase}/tixpy-canopi-tab.ico'`)
+    .replaceAll('href="/favicon.ico?v=', `href="${projectBase}/tixpy-canopi-tab.ico?v=`)
+    .replaceAll("href='/favicon.ico?v=", `href='${projectBase}/tixpy-canopi-tab.ico?v=`)
+    .replaceAll('href="/tixpy-canopi-tab.ico"', `href="${projectBase}/tixpy-canopi-tab.ico"`)
+    .replaceAll("href='/tixpy-canopi-tab.ico'", `href='${projectBase}/tixpy-canopi-tab.ico'`)
+    .replaceAll('href="/tixpy-canopi-tab.ico?v=', `href="${projectBase}/tixpy-canopi-tab.ico?v=`)
+    .replaceAll("href='/tixpy-canopi-tab.ico?v=", `href='${projectBase}/tixpy-canopi-tab.ico?v=`)
+    .replaceAll('href="./favicon.ico"', `href="${projectBase}/tixpy-canopi-tab.ico"`)
+    .replaceAll("href='./favicon.ico'", `href='${projectBase}/tixpy-canopi-tab.ico'`)
+    .replaceAll('href="./favicon.ico?v=', `href="${projectBase}/tixpy-canopi-tab.ico?v=`)
+    .replaceAll("href='./favicon.ico?v=", `href='${projectBase}/tixpy-canopi-tab.ico?v=`)
+    .replaceAll('href="./tixpy-canopi-tab.ico"', `href="${projectBase}/tixpy-canopi-tab.ico"`)
+    .replaceAll("href='./tixpy-canopi-tab.ico'", `href='${projectBase}/tixpy-canopi-tab.ico'`)
+    .replaceAll('href="./tixpy-canopi-tab.ico?v=', `href="${projectBase}/tixpy-canopi-tab.ico?v=`)
+    .replaceAll("href='./tixpy-canopi-tab.ico?v=", `href='${projectBase}/tixpy-canopi-tab.ico?v=`)
+    .replaceAll('href="./assets/branding/', `href="${projectBase}/assets/branding/`)
+    .replaceAll("href='./assets/branding/", `href='${projectBase}/assets/branding/`);
 }
 
 function patchWebBundle(bundle) {
