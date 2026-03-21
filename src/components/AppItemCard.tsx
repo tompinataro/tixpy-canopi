@@ -30,6 +30,14 @@ export function AppItemCard({
   const actionLabelStyle = [styles.actionLabel, isCompact && styles.compactActionLabel];
   const familyTone = variant ? CARD_TONES[variant] : null;
 
+  const getActionButtonSizingStyle = (type: AppActionType) => {
+    if (type === 'appStore' || type === 'macos') {
+      return styles.actionButtonStoreSized;
+    }
+
+    return null;
+  };
+
   const handlePress = (link: AppLink, event?: GestureResponderEvent) => {
     if (!link.url) {
       return;
@@ -115,6 +123,7 @@ export function AppItemCard({
                 accessibilityLabel={`${title} ${link.type}`}
                 style={({ pressed }) => [
                   styles.actionButton,
+                  getActionButtonSizingStyle(link.type),
                   badge === 'live' ? styles.actionButtonLive : styles.actionButtonDemo,
                   disabled && styles.actionButtonDisabled,
                   pressed && !disabled && styles.actionButtonPressed,
@@ -203,6 +212,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     flexShrink: 0,
+  },
+  actionButtonStoreSized: {
+    minWidth: 86,
   },
   actionButtonLive: {
     backgroundColor: 'rgba(34,197,94,0.12)',
