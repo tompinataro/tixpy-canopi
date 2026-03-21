@@ -22,15 +22,20 @@ function consumeWebPressEvent(event?: GestureResponderEvent) {
 export async function openExternalLink(url: string, label: string, event?: GestureResponderEvent) {
   try {
     // On web, Linking.canOpenURL can be overly strict depending on environment.
-    // Prefer a direct window.open from the user gesture.
+    // Prefer a direct new-tab open from the user gesture.
     if (Platform.OS === 'web') {
       consumeWebPressEvent(event);
 
-      const w = globalThis?.open?.(url, '_blank', 'noopener,noreferrer');
-      if (!w) {
-        // Popup blocked or open() unavailable.
-        globalThis.location.href = url;
+      const anchor = globalThis.document?.createElement?.('a');
+      if (anchor) {
+        anchor.href = url;
+        anchor.target = '_blank';
+        anchor.rel = 'noopener noreferrer';
+        anchor.click();
+        return;
       }
+
+      globalThis?.open?.(url, '_blank', 'noopener,noreferrer');
       return;
     }
 
