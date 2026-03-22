@@ -5,7 +5,6 @@ import {
   APP_STORE_DVD_URL,
   APP_STORE_POOL_URL,
   APP_STORE_PULLTAB_URL,
-  MACOS_PULLTAB_URL,
   DEMO_BLOOM_URL,
   DEMO_DVD_URL,
   DEMO_POOL_URL,
@@ -126,7 +125,7 @@ export const VALET_BALLET_PLATFORM: ShowcasePlatform = {
       badge: 'live',
       icon: ICONS.pulltab,
       links: [
-        { type: 'macos', url: MACOS_PULLTAB_URL },
+        { type: 'appStore', url: APP_STORE_PULLTAB_URL },
         { type: 'googlePlay', url: GOOGLE_PLAY_PULLTAB_URL },
         { type: 'demo', url: DEMO_PULLTAB_URL },
       ],
